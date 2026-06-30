@@ -748,7 +748,7 @@ class BidsHandler {
         int removed = bidsFiles.size() - filtered.size()
         if (removed > 0) {
             BidsLogger.logProgress('nf-bids-handler',
-                "├─ 🚫 Bidsignore: discarded ${removed} file(s) matching ignore patterns")
+                "├─ 🚫 bidsignore: discarded ${removed} file(s) matching ignore patterns")
         }
         return filtered
     }

@@ -97,6 +97,9 @@ class BidsIgnoreFilter {
             return false
         }
         Path relative = relativize(filePath)
+        if (relative == null) {
+            return false
+        }
         for (PathMatcher matcher : matchers) {
             if (matcher.matches(relative)) {
                 return true
@@ -125,9 +128,9 @@ class BidsIgnoreFilter {
         try {
             return root.relativize(path.toAbsolutePath())
         } catch (IllegalArgumentException ignored) {
-            // If relativization fails (e.g. different filesystem roots), use
-            // the filename only so simple patterns still work.
-            return path.getFileName()
+            // If relativization fails (e.g. different filesystem roots), return null
+            // so the caller can skip the match rather than risk a false positive.
+            return null
         }
     }
 
