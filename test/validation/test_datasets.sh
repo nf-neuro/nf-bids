@@ -180,6 +180,7 @@ BIDS_SUITES=(
 )
 
 EXTRA_SUITES=(
+    "test/validation/test_bidsignore.nf.test"
     "test/validation/test_path_types.nf.test"
     "test/validation/test_process_path_input.nf.test"
     "test/validation/test_grouptupleby.nf.test"
