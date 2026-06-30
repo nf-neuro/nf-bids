@@ -1,0 +1,6 @@
+{
+  "Name": "Bidsignore test dataset",
+  "DatasetType": "raw",
+  "BIDSVersion": "1.10.0",
+  "License": "CC0"
+}

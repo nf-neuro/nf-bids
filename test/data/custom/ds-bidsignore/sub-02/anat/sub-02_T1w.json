@@ -1,0 +1,7 @@
+{
+  "Manufacturer": "Siemens",
+  "MagneticFieldStrength": 3,
+  "MRAcquisitionType": "3D",
+  "EchoTime": 0.0035,
+  "RepetitionTime": 2.3
+}

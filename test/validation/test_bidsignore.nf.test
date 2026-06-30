@@ -1,0 +1,61 @@
+nextflow_workflow {
+
+    name "BidsIgnore Auto-detect"
+    script "./test_bidsignore.nf"
+    workflow "test_bidsignore_autodetect"
+
+    test("auto-detect .bidsignore: filtered subject is absent from output") {
+        when {
+            params {
+                bids_dir = "${baseDir}/test/data/custom/ds-bidsignore"
+                config   = "${baseDir}/test/configs/config_t1w.yaml"
+            }
+        }
+        then {
+            assert workflow.success
+
+            def results  = workflow.out.bids_channel.collect()
+            def subjects = results.collect { it.meta.subject }
+
+            // sub-02/** is listed in .bidsignore — must not appear
+            assert !subjects.contains('sub-02') :
+                "sub-02 should be filtered out by auto-detected .bidsignore, but got subjects: ${subjects}"
+            // sub-01 is not listed — must pass through
+            assert subjects.contains('sub-01') :
+                "sub-01 should not be filtered; got subjects: ${subjects}"
+        }
+    }
+
+}
+
+nextflow_workflow {
+
+    name "BidsIgnore Explicit Override"
+    script "./test_bidsignore.nf"
+    workflow "test_bidsignore_explicit"
+
+    test("explicit options.bidsignore overrides auto-detect: overridden subject is absent") {
+        when {
+            params {
+                bids_dir   = "${baseDir}/test/data/custom/ds-bidsignore"
+                config     = "${baseDir}/test/configs/config_t1w.yaml"
+                // bidsignore_sub01.txt filters sub-01/**, so only sub-02 passes through
+                bidsignore = "${baseDir}/test/data/custom/ds-bidsignore/bidsignore_sub01.txt"
+            }
+        }
+        then {
+            assert workflow.success
+
+            def results  = workflow.out.bids_channel.collect()
+            def subjects = results.collect { it.meta.subject }
+
+            // sub-01/** is listed in the explicit ignore file — must not appear
+            assert !subjects.contains('sub-01') :
+                "sub-01 should be filtered by explicit options.bidsignore, but got subjects: ${subjects}"
+            // sub-02 is not listed in the override file — must pass through
+            assert subjects.contains('sub-02') :
+                "sub-02 should not be filtered; got subjects: ${subjects}"
+        }
+    }
+
+}

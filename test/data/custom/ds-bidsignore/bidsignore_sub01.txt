@@ -1,0 +1,2 @@
+# ignore first subject (used to test explicit override)
+sub-01/**

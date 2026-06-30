@@ -1,0 +1,4 @@
+loop_over: [subject]
+
+T1w:
+  plain_set: {}
