@@ -20,6 +20,7 @@ import java.nio.file.Paths
 import nfneuro.plugin.grouping.*
 import nfneuro.plugin.model.*
 import nfneuro.plugin.parser.BidsParser
+import nfneuro.plugin.util.BidsIgnoreFilter
 import nfneuro.plugin.util.BidsLogger
 import nfneuro.plugin.util.ParticipantsMetadataMerger
 import nfneuro.plugin.util.SuffixMapper
@@ -180,6 +181,9 @@ class BidsHandler {
         dataset.loadParticipants()
         List<BidsFile> bidsFiles = dataset.getFiles()
         this.participantsMetadata = (dataset.participants ?: []) as List<Map<String, String>>
+
+        // Apply bidsignore filtering
+        bidsFiles = applyBidsIgnore(bidsFiles)
 
         // Route to appropriate handlers based on configuration
         DataflowQueue results = processDatasets(getBidsParentDir(), bidsFiles, config, configAnalysis, loopOverEntities)
@@ -712,6 +716,41 @@ class BidsHandler {
      */
     private String getBidsParentDir() {
         return bidsDir ? new File(bidsDir).parent : ''
+    }
+
+    /**
+     * Apply bidsignore filtering to remove files that match ignore patterns.
+     *
+     * <p>The ignore file is resolved in the following order of precedence:</p>
+     * <ol>
+     *   <li>The path supplied via {@code options.bidsignore} (explicit override).</li>
+     *   <li>A {@code .bidsignore} file auto-detected at the dataset root.</li>
+     * </ol>
+     * <p>If neither source provides any patterns the original list is returned
+     * unchanged.</p>
+     *
+     * @param bidsFiles list of parsed BIDS files
+     * @return filtered list with ignored files removed
+     */
+    private List<BidsFile> applyBidsIgnore(List<BidsFile> bidsFiles) {
+        BidsIgnoreFilter filter
+        if (options?.bidsignore) {
+            filter = BidsIgnoreFilter.fromFile(options.bidsignore as String, bidsDir)
+        } else {
+            filter = BidsIgnoreFilter.fromBidsRoot(bidsDir)
+        }
+
+        if (filter.isEmpty()) {
+            return bidsFiles
+        }
+
+        List<BidsFile> filtered = bidsFiles.findAll { BidsFile f -> !filter.shouldIgnore(f.path) }
+        int removed = bidsFiles.size() - filtered.size()
+        if (removed > 0) {
+            BidsLogger.logProgress('nf-bids-handler',
+                "├─ 🚫 Bidsignore: discarded ${removed} file(s) matching ignore patterns")
+        }
+        return filtered
     }
 
     /**

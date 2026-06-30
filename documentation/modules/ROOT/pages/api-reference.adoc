@@ -169,6 +169,9 @@ and parameter descriptions.
 
 | `BidsCsvParser`
 | Parses the CSV produced by `libBIDSsh_parse_bids_to_csv` into `BidsFile` objects.
+
+| `BidsIgnoreFilter`
+| Reads a `.bidsignore`-style file and tests whether a `BidsFile` path should be excluded from the dataset; used by `BidsHandler` after parsing.
 |===
 
 == Key entry points
@@ -187,7 +190,7 @@ a|
 Channel.fromBIDS(
     String bidsDir,
     String configPath = null,
-    Map    options    = [:]   // libbids_sh, flatten_output, unpack_json_sidecar, bids_validation
+    Map    options    = [:]   // libbids_sh, flatten_output, unpack_json_sidecar, bids_validation, bidsignore
 )
 ----
 Returns a `DataflowWriteChannel`.  Each emitted item is a flat map

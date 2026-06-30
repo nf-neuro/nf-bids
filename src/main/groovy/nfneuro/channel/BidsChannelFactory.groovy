@@ -116,6 +116,13 @@ class BidsChannelFactory {
             }
         }
 
+        if (options.bidsignore) {
+            Path bidsignorePath = Paths.get(options.bidsignore as String)
+            if (!Files.exists(bidsignorePath) || !Files.isRegularFile(bidsignorePath)) {
+                throw new IllegalArgumentException("Bidsignore file not found: ${options.bidsignore}")
+            }
+        }
+
         BidsLogger.logProgress('✓ Pre-flight checks completed')
     }
 
