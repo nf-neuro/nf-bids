@@ -6,7 +6,7 @@
 #
 site:
   title: nf-bids Plugin Documentation
-  start_page: nf-bids::index.adoc
+  start_page: ROOT::index.adoc
   # url is overridden in CI for GitHub Pages (see .github/workflows/docs.yml)
   url: https://nf-neuro.github.io/nf-bids
 
@@ -20,6 +20,7 @@ ui:
   bundle:
     url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
+  # output_dir: nf-bids/_
 
 output:
   dir: ./build/site

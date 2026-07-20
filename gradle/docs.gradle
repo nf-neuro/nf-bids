@@ -61,7 +61,7 @@ tasks.register('integrateApiDocs', Copy) {
     description = 'Place the GroovyDoc API reference inside the built Antora site.'
     dependsOn 'apiDocs', 'buildDocsSite'
     from groovydocOut
-    into file("${docBuildDir}/site/nf-bids/${project.version}/development/api")
+    into file("${docBuildDir}/site/${project.version}/development/api")
 }
 
 tasks.register('docs') {

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SITE_DIR="${DOC_DIR}/build/site-publish"
+SITE_DIR="${DOC_DIR}/build/site"
 DEFAULT_PORT="${DOCS_PORT:-5050}"
 
 log() { printf '\033[1;34m[docs-serve]\033[0m %s\n' "$*"; }

@@ -88,13 +88,13 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: documentation/build/site-publish
+          path: documentation/build/site
 
-      - name: Upload Pages artifact
+      - name: Upload Pages artifact (PR)
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
         with:
-          path: documentation/build/site-publish
+          path: documentation/build/site
 
   deploy:
     name: Deploy to GitHub Pages
